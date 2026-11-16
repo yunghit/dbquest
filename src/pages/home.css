@@ -526,6 +526,248 @@
   font-size: 0.8rem;
 }
 
+
+
+.home-quick-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 20px 22px;
+  border: 1px solid rgba(124, 92, 255, 0.28);
+  border-radius: 19px;
+  background:
+    radial-gradient(circle at 8% 50%, rgba(124, 92, 255, 0.18), transparent 18rem),
+    linear-gradient(110deg, rgba(22, 35, 63, 0.94), rgba(16, 28, 48, 0.82));
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.16);
+}
+
+.home-quick-copy,
+.home-quick-action {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.home-quick-copy {
+  min-width: 0;
+}
+
+.home-quick-copy > div {
+  min-width: 0;
+}
+
+.home-quick-copy h2 {
+  margin: 0 0 4px;
+  font-size: 1.12rem;
+}
+
+.home-quick-copy p:not(.eyebrow) {
+  max-width: 620px;
+  margin: 0;
+  color: var(--muted-strong);
+  font-size: 0.78rem;
+}
+
+.home-quick-copy .eyebrow {
+  margin-bottom: 4px;
+}
+
+.home-quick-icon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(255, 180, 84, 0.28);
+  border-radius: 15px;
+  color: var(--accent);
+  background: rgba(255, 180, 84, 0.11);
+  font-size: 1.35rem;
+  box-shadow: 0 0 22px rgba(255, 180, 84, 0.1);
+}
+
+.home-quick-action {
+  flex: 0 0 min(275px, 32%);
+  justify-content: flex-end;
+}
+
+.home-quick-progress {
+  flex: 1;
+  min-width: 115px;
+}
+
+.home-quick-progress-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 7px;
+  color: var(--muted);
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.home-quick-progress-label strong {
+  color: var(--cyan);
+}
+
+.home-quick-track {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.home-quick-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--a1), var(--cyan));
+  transition: width 500ms ease;
+}
+
+.button-small {
+  min-height: 36px;
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.home-curriculum-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -2px 0 15px;
+}
+
+.home-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: min(330px, 100%);
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--muted);
+  background: rgba(16, 29, 49, 0.68);
+}
+
+.home-search:focus-within {
+  border-color: rgba(109, 228, 225, 0.5);
+  box-shadow: 0 0 0 3px rgba(109, 228, 225, 0.08);
+}
+
+.home-search input {
+  min-width: 0;
+  margin: 0;
+  padding: 8px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 0.77rem;
+}
+
+.home-search input:focus {
+  outline: 0;
+}
+
+.home-search-clear {
+  min-width: 24px;
+  min-height: 24px;
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+  background: transparent;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.home-search-clear:hover {
+  color: var(--text);
+  background: transparent;
+  filter: none;
+}
+
+.home-filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.home-filter-group button {
+  min-height: 34px;
+  padding: 7px 11px;
+  border-color: var(--line);
+  color: var(--muted);
+  background: rgba(16, 29, 49, 0.48);
+  font-size: 0.69rem;
+}
+
+.home-filter-group button:hover,
+.home-filter-group button.is-active {
+  color: var(--text);
+  border-color: rgba(109, 228, 225, 0.35);
+  background: rgba(109, 228, 225, 0.1);
+  filter: none;
+}
+
+.home-inline-button {
+  min-height: 34px;
+  margin-top: 2px;
+  padding: 7px 10px;
+  border-color: var(--line);
+  color: var(--cyan);
+  background: transparent;
+  font-size: 0.72rem;
+}
+
+.home-inline-button:hover {
+  background: rgba(109, 228, 225, 0.08);
+  filter: none;
+}
+
+@media (max-width: 760px) {
+  .home-quick-panel {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .home-quick-action {
+    flex-basis: auto;
+  }
+
+  .home-curriculum-tools {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .home-search {
+    width: 100%;
+  }
+
+  .home-filter-group {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-quick-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .home-quick-action .button {
+    width: 100%;
+  }
+}
+
 @media (max-width: 760px) {
   .home-hero {
     grid-template-columns: 1fr;
