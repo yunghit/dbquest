@@ -1,0 +1,81 @@
+[
+ {
+  "order": 1,
+  "emoji": "🗄️",
+  "title": "1 · Introduction to DBMS (Unit 1)",
+  "learn": "<h3>What is a DBMS?</h3><p>A <b>database management system</b> is a collection of interrelated data (the <b>database</b>) plus programs to access it. Its goal: an environment that is <b>convenient and efficient</b> for storing and retrieving information, while keeping data safe despite crashes or unauthorised access.</p>\n<h3>Why not plain files?</h3><p>File-processing systems (one program per task, data in OS files) suffer from: <b>redundancy and inconsistency</b> (same student data in the library and exams files, one copy updated, the other not), <b>accessing anomalies</b> (a new question needs a new program), <b>data isolation</b> (data scattered in different formats), <b>integrity problems</b> (rules buried in program code), <b>atomicity problems</b> (a transfer fails halfway), <b>concurrent access anomalies</b> and <b>security problems</b>.</p>\n<h3>What a DBMS gives you</h3><p>Controlled redundancy, consistency, data sharing and integration, integrity constraints, security, atomicity, a query language, concurrency control and <b>data independence</b>. The costs: hardware and software, data conversion, staff training, technical staff and a single point of failure.</p>\n<h3>Three levels of abstraction</h3><p><b>Physical</b>: how data is actually stored. <b>Logical (conceptual)</b>: what data is stored and the relationships. <b>View</b>: the part each user sees. <b>Physical data independence</b> means you can change storage without changing the logical schema; <b>logical data independence</b> means you can change the logical schema without rewriting applications.</p>\n<h3>Architecture</h3><p>The <b>query processor</b> (DDL interpreter, DML compiler, query evaluation engine) turns queries into low-level instructions. The <b>storage manager</b> (authorisation, transaction manager, file manager, buffer manager) handles disk. Users: naive users, application programmers, sophisticated users and the <b>DBA</b>.</p>\n<h3>Data models</h3><p><b>ER model</b> (entities, relationships; cardinalities one-to-one, one-to-many, many-to-one, many-to-many), <b>relational model</b> (tables), object-based, record-based and physical models.</p>",
+  "code": "",
+  "quiz": [
+   {
+    "q": "Which is a disadvantage of a file-processing system?",
+    "options": [
+     "Data redundancy and inconsistency",
+     "Atomic transfers",
+     "Built-in security",
+     "Data independence"
+    ],
+    "answer": 0,
+    "why": "Duplicate copies drift apart."
+   },
+   {
+    "q": "Which level of abstraction describes what each user sees?",
+    "options": [
+     "Physical",
+     "Logical",
+     "View",
+     "Conceptual only"
+    ],
+    "answer": 2,
+    "why": "The view level hides the rest."
+   },
+   {
+    "q": "Changing the storage structure without changing the logical schema is?",
+    "options": [
+     "Logical data independence",
+     "Physical data independence",
+     "Normalisation",
+     "Atomicity"
+    ],
+    "answer": 1,
+    "why": "Physical data independence."
+   },
+   {
+    "q": "Which component turns queries into low-level instructions?",
+    "options": [
+     "Storage manager",
+     "Query processor",
+     "Buffer manager",
+     "File manager"
+    ],
+    "answer": 1,
+    "why": "DDL interpreter, DML compiler, evaluation engine."
+   },
+   {
+    "q": "A customer has many accounts and each account belongs to one customer. This is?",
+    "options": [
+     "One-to-one",
+     "One-to-many",
+     "Many-to-many",
+     "None"
+    ],
+    "answer": 1,
+    "why": "1:M."
+   },
+   {
+    "q": "Who is responsible for overall control of the database system?",
+    "options": [
+     "Naive user",
+     "Application programmer",
+     "DBA",
+     "Query optimiser"
+    ],
+    "answer": 2,
+    "why": "The database administrator."
+   }
+  ],
+  "lab": {
+   "task": "List four problems of file-processing systems and say which DBMS feature fixes each.",
+   "solution": "Redundancy/inconsistency → controlled redundancy and a single copy; accessing anomalies → query language (SQL); integrity problems → integrity constraints; atomicity problems → transaction management; concurrent access anomalies → concurrency control; security → authorisation."
+  }
+ }
+]

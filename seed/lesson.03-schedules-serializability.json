@@ -1,0 +1,81 @@
+[
+ {
+  "order": 3,
+  "emoji": "🔀",
+  "title": "3 · Schedules & Serializability (Unit 3)",
+  "learn": "<h3>Schedule</h3><p>A <b>schedule</b> is the chronological ordering of the operations of several transactions. A <b>serial</b> schedule never interleaves transactions, so it is always consistent, but it limits concurrency and wastes CPU. A <b>complete</b> schedule ends every transaction with commit or abort.</p>\n<h3>Recoverability</h3><p><b>Recoverable</b>: if Tj reads data written by Ti, Ti must commit before Tj. <b>Non-recoverable</b>: Tj reads Ti's dirty value and commits first; if Ti then fails, Tj cannot be rolled back. <b>Cascading rollback</b>: one failure forces dependent transactions to abort. <b>Cascadeless</b>: a transaction reads a value only after the writer commits. <b>Strict</b>: no read or overwrite until the writer commits or aborts. Every strict schedule is recoverable and cascadeless.</p>\n<h3>Conflict serializability</h3><p>Conflicting pairs on the same item by different transactions: <b>R-W, W-R, W-W</b>. Draw a <b>precedence graph</b> (edge Ti → Tj if Ti's conflicting operation comes first). A schedule is <b>conflict serializable if and only if the graph has no cycle</b>.</p>\n<p><i>Example:</i> S: R1(x) R2(x) W1(x) R1(y) W2(x) W1(y). R2(x) before W1(x) gives 2→1; R1(x) before W2(x) gives 1→2. Cycle, so <b>not</b> conflict serializable.</p>\n<h3>View serializability</h3><p>A schedule is <b>view serializable</b> if it is view equivalent to a serial schedule: same <b>initial reads</b>, same <b>update (write-read) sources</b> and same <b>final writes</b>. Every conflict-serializable schedule is view serializable, but not the other way round.</p>",
+  "code": "",
+  "quiz": [
+   {
+    "q": "A schedule is conflict serializable if and only if its precedence graph is?",
+    "options": [
+     "Acyclic",
+     "Cyclic",
+     "Complete",
+     "Empty"
+    ],
+    "answer": 0,
+    "why": "No cycles."
+   },
+   {
+    "q": "Which pair is NOT a conflict?",
+    "options": [
+     "R-W",
+     "W-R",
+     "W-W",
+     "R-R"
+    ],
+    "answer": 3,
+    "why": "Two reads never conflict."
+   },
+   {
+    "q": "In a recoverable schedule, if Tj reads from Ti, then?",
+    "options": [
+     "Tj commits first",
+     "Ti commits before Tj",
+     "Both abort",
+     "Ti reads from Tj"
+    ],
+    "answer": 1,
+    "why": "The writer commits first."
+   },
+   {
+    "q": "Which schedule type forbids reading OR overwriting uncommitted data?",
+    "options": [
+     "Cascading",
+     "Cascadeless",
+     "Strict",
+     "Non-recoverable"
+    ],
+    "answer": 2,
+    "why": "Strict."
+   },
+   {
+    "q": "Every conflict-serializable schedule is?",
+    "options": [
+     "View serializable",
+     "Serial",
+     "Strict",
+     "Non-recoverable"
+    ],
+    "answer": 0,
+    "why": "But view serializable does not imply conflict serializable."
+   },
+   {
+    "q": "Edges 1→2 and 2→1 appear in the graph. The schedule is?",
+    "options": [
+     "Conflict serializable",
+     "Not conflict serializable",
+     "Serial",
+     "Strict"
+    ],
+    "answer": 1,
+    "why": "A cycle."
+   }
+  ],
+  "lab": {
+   "task": "Test S: R1(A) W1(A) R2(A) W2(A) R1(B) W1(B). Draw the edges and decide.",
+   "solution": "W1(A) before R2(A) and W2(A) gives 1→2. R2(A)/W2(A) vs later R1(B)/W1(B) touch different items. Only edge 1→2, no cycle: conflict serializable (equivalent to T1 then T2)."
+  }
+ }
+]

@@ -1,0 +1,81 @@
+[
+ {
+  "order": 5,
+  "emoji": "⏱️",
+  "title": "5 · Timestamp Ordering & Log-Based Recovery (Unit 3)",
+  "learn": "<h3>Timestamp ordering</h3><p>The DBMS gives each transaction a unique <b>timestamp</b> TS(Ti) (system clock or a logical counter), so an older transaction has a smaller TS. Each item A keeps <b>RTS(A)</b>, the largest timestamp that read it successfully, and <b>WTS(A)</b>, the largest timestamp that wrote it.</p>\n<p><b>Read(A) by Ti:</b> if WTS(A) &gt; TS(Ti) then <b>rollback Ti</b>; else execute and set RTS(A) = max(RTS(A), TS(Ti)).<br><b>Write(A) by Ti:</b> if RTS(A) &gt; TS(Ti) rollback; if WTS(A) &gt; TS(Ti) rollback; else execute and set WTS(A) = TS(Ti).</p>\n<p><i>Worked example:</i> T1=10, T2=20, T3=30. After T3 reads A the RTS is 30; T2's later read leaves it at 30. Writes by T1 (10) then T4 (40) give WTS(A) = 40.</p>\n<h3>Recovery management</h3><p>Recovery restores the database to the most recent consistent state before a failure. Failure types: system crash, transaction (logical) error, concurrency-control enforcement, local errors, disk failure, physical problems or catastrophes.</p>\n<h3>Log records</h3><p>[start_transaction, T], [write_item, T, X, old, new], [read_item, T, X], [commit, T], [abort, T].</p>\n<p><b>Deferred update (no-undo/redo):</b> the physical database changes only after the commit point. Committed: <b>redo</b>. Not committed: ignore/rollback.<br><b>Immediate update (undo/redo):</b> the database changes during execution. Failure before commit: <b>undo</b> using old values. Committed: <b>redo</b> using new values.</p>",
+  "code": "",
+  "quiz": [
+   {
+    "q": "RTS(A) means?",
+    "options": [
+     "Smallest read time",
+     "Largest timestamp of a successful read",
+     "Last write",
+     "Rollback time"
+    ],
+    "answer": 1,
+    "why": "Largest successful reader."
+   },
+   {
+    "q": "Read by Ti is rolled back when?",
+    "options": [
+     "RTS(A) > TS(Ti)",
+     "WTS(A) > TS(Ti)",
+     "TS(Ti) = 0",
+     "RTS(A) = 0"
+    ],
+    "answer": 1,
+    "why": "A younger transaction already wrote it."
+   },
+   {
+    "q": "A write by Ti is rolled back when?",
+    "options": [
+     "RTS(A) > TS(Ti) or WTS(A) > TS(Ti)",
+     "Only RTS = 0",
+     "TS(Ti) is largest",
+     "Never"
+    ],
+    "answer": 0,
+    "why": "Either rule."
+   },
+   {
+    "q": "Deferred update changes the database when?",
+    "options": [
+     "Before each write",
+     "After the commit point",
+     "At start",
+     "Never"
+    ],
+    "answer": 1,
+    "why": "Only after commit."
+   },
+   {
+    "q": "A log record with old and new values supports?",
+    "options": [
+     "Undo and redo",
+     "Redo only",
+     "Nothing",
+     "Locking"
+    ],
+    "answer": 0,
+    "why": "Old for undo, new for redo."
+   },
+   {
+    "q": "Immediate update with failure before commit needs?",
+    "options": [
+     "Undo",
+     "Redo",
+     "Both ignored",
+     "Shadow copy"
+    ],
+    "answer": 0,
+    "why": "Restore old values."
+   }
+  ],
+  "lab": {
+   "task": "A has RTS=0, WTS=0. T1 (TS 100) writes A, then T2 (TS 50) reads A. What happens?",
+   "solution": "T1's write sets WTS(A)=100. T2 reads with WTS(A)=100 > TS(T2)=50, so T2 is rolled back."
+  }
+ }
+]

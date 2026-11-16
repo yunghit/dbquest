@@ -1,0 +1,81 @@
+[
+ {
+  "order": 6,
+  "emoji": "📇",
+  "title": "6 · Storage, File Organisation & Indexing (Unit 4)",
+  "learn": "<h3>Storage hierarchy</h3><p>Media differ in speed, cost and reliability. <b>Primary</b>: cache and main memory (fastest, most expensive, <b>volatile</b>). <b>Secondary</b>: flash and magnetic disk (non-volatile; flash reads fast but writes/erases slowly). <b>Tertiary</b>: optical disk and magnetic tape, used mainly for backups. Going down, cost falls and access time rises.</p>\n<h3>File organisation</h3><p>A database is a collection of <b>files</b>; a file is a sequence of <b>records</b>; a record is a sequence of <b>fields</b>. Data moves between disk and RAM in whole <b>blocks</b>. <b>Records per block = block size ÷ record size</b> (512 B ÷ 4 B = 128 records).</p>\n<p><b>Spanned</b>: a record may be split across blocks (no wasted space but reading one record may need two blocks). <b>Unspanned</b>: a record always sits in one block (block 10 B, record 3 B: 3 records fit and 1 B is wasted). Most databases use unspanned. Records can be <b>unordered</b> (fast insert, slow search) or <b>ordered</b> on an attribute.</p>\n<h3>Indexing</h3><p>An index reduces disk accesses. Each entry has a <b>search key</b> and a <b>data reference (pointer)</b> to a disk block. <b>Dense</b>: an entry for every search-key value. <b>Sparse</b>: entries for only some records. Example: SK 1→B1 (records 1-10), 11→B2, 21→B3, 31→B4; to find record 25, go straight to block 3.</p>\n<p><b>Single-level</b>: <b>primary</b> (ordered file, key), <b>clustering</b> (ordered file, non-key), <b>secondary</b> (unordered file). <b>Multilevel</b>: <b>B-tree</b> and <b>B+-tree</b>.</p>",
+  "code": "",
+  "quiz": [
+   {
+    "q": "Which storage is volatile?",
+    "options": [
+     "Magnetic disk",
+     "Main memory",
+     "Flash",
+     "Magnetic tape"
+    ],
+    "answer": 1,
+    "why": "RAM and cache lose data on power off."
+   },
+   {
+    "q": "Records per block = ?",
+    "options": [
+     "Record size ÷ block size",
+     "Block size ÷ record size",
+     "Block size × record size",
+     "File size ÷ 2"
+    ],
+    "answer": 1,
+    "why": "Floor of block ÷ record."
+   },
+   {
+    "q": "Block 10 B, record 3 B, unspanned: bytes wasted per block?",
+    "options": [
+     "0",
+     "1",
+     "2",
+     "3"
+    ],
+    "answer": 1,
+    "why": "Three records use 9 B."
+   },
+   {
+    "q": "Which index has an entry for every search-key value?",
+    "options": [
+     "Sparse",
+     "Dense",
+     "Clustering",
+     "B-tree only"
+    ],
+    "answer": 1,
+    "why": "Dense."
+   },
+   {
+    "q": "A primary index is built on?",
+    "options": [
+     "Unordered file, key",
+     "Ordered file, key",
+     "Ordered file, non-key",
+     "Unordered file, non-key"
+    ],
+    "answer": 1,
+    "why": "Ordered file with a key."
+   },
+   {
+    "q": "Magnetic tape is mainly used for?",
+    "options": [
+     "Cache",
+     "Backups",
+     "Running queries",
+     "Buffers"
+    ],
+    "answer": 1,
+    "why": "Tertiary storage."
+   }
+  ],
+  "lab": {
+   "task": "Block 1024 B, record 100 B. Unspanned: records per block and wasted bytes? Spanned: how many blocks for 1000 records?",
+   "solution": "Unspanned: floor(1024/100)=10 records, 24 B wasted. Spanned: 1000×100 = 100,000 B ÷ 1024 = 97.66, so 98 blocks."
+  }
+ }
+]

@@ -1,0 +1,81 @@
+[
+ {
+  "order": 2,
+  "emoji": "⚛️",
+  "title": "2 · Transactions, ACID & Concurrency Problems (Unit 3)",
+  "learn": "<h3>Transaction</h3><p>A <b>transaction</b> is a program unit whose execution may change the contents of the database, a logical unit of work that must complete entirely to stay correct. Example: transfer 100 from A (300) to B (400): Read A, A=A-100, Write A, Read B, B=B+100, Write B. Before: 300+400 = 700. After: 200+500 = 700, <b>consistent</b>.</p>\n<h3>ACID</h3><p><b>Atomicity</b>: all or nothing (commit makes changes visible, abort hides them). <b>Consistency</b>: a consistent database stays consistent (sum before = sum after). <b>Isolation</b>: a transaction's actions are hidden from others until it terminates. <b>Durability</b>: once committed, updates are permanent.</p>\n<h3>Why run transactions concurrently?</h3><p>Shorter waiting time and better throughput and resource use. The price is four classic problems:</p>\n<p><b>1. Lost update (W-W):</b> x=100. T1 reads 100, T2 reads 100, T1 writes 110, T2 writes 80: T1's update is overwritten.<br><b>2. Dirty read / temporary update (W-R):</b> T1 writes x=110 then fails, but T2 already read 110 and built on it.<br><b>3. Incorrect summary:</b> T2 sums A and Y while T1 changes Y in between, so the total mixes old and new values.<br><b>4. Unrepeatable read (R-W):</b> T1 reads A=1000, T2 changes A to 3000, T1 reads again and gets 3000.</p>\n<h3>Implementing atomicity and durability</h3><p>The <b>recovery manager</b> does it. The simple <b>shadow-database scheme</b> keeps a <b>db_pointer</b> to the current copy; all updates go to a new copy. <b>Abort</b>: ignore the new copy. <b>Commit</b>: flip the pointer to the new copy. It assumes one transaction at a time and no disk failure, so it does not handle concurrency.</p>",
+  "code": "",
+  "quiz": [
+   {
+    "q": "Which ACID property says a transaction is all or nothing?",
+    "options": [
+     "Atomicity",
+     "Consistency",
+     "Isolation",
+     "Durability"
+    ],
+    "answer": 0,
+    "why": "Commit or abort, nothing in between."
+   },
+   {
+    "q": "T1 writes x, fails, but T2 already read x. This is a?",
+    "options": [
+     "Lost update",
+     "Dirty read",
+     "Unrepeatable read",
+     "Incorrect summary"
+    ],
+    "answer": 1,
+    "why": "Reading uncommitted data (W-R)."
+   },
+   {
+    "q": "Two transactions overwrite each other's writes. This is a?",
+    "options": [
+     "Dirty read",
+     "Lost update (W-W)",
+     "Phantom",
+     "Deadlock"
+    ],
+    "answer": 1,
+    "why": "The first update is lost."
+   },
+   {
+    "q": "T1 reads A twice and gets different values because T2 changed it. This is?",
+    "options": [
+     "Unrepeatable read (R-W)",
+     "Dirty read",
+     "Lost update",
+     "Atomicity failure"
+    ],
+    "answer": 0,
+    "why": "R-W conflict."
+   },
+   {
+    "q": "In the shadow-database scheme, commit means?",
+    "options": [
+     "Delete the old copy log",
+     "Move db_pointer to the new copy",
+     "Copy the old into the new",
+     "Lock the file"
+    ],
+    "answer": 1,
+    "why": "The pointer is flipped."
+   },
+   {
+    "q": "Which is NOT an advantage of concurrent execution?",
+    "options": [
+     "Reduced waiting time",
+     "Better throughput",
+     "Better resource use",
+     "Guaranteed no conflicts"
+    ],
+    "answer": 3,
+    "why": "Conflicts are the cost, so we need control."
+   }
+  ],
+  "lab": {
+   "task": "A=500, B=200. T1 moves 100 from A to B. Show why T2 printing A+B halfway gives an inconsistent total, and name the problem.",
+   "solution": "If T2 reads after W(A)=400 but before W(B)=300, it sees 400+200 = 600 instead of 700. This is an incorrect summary (violates isolation)."
+  }
+ }
+]

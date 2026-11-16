@@ -1,0 +1,81 @@
+[
+ {
+  "order": 4,
+  "emoji": "🔒",
+  "title": "4 · Lock-Based Protocols & Deadlock (Unit 3)",
+  "learn": "<h3>Locks</h3><p>A lock gives a transaction exclusive use of a data item. <b>Shared lock (S)</b>: read only. <b>Exclusive lock (X)</b>: read and write. <b>Compatibility</b>: S with S is allowed; S with X, X with S and X with X are not. Any number of transactions can hold S, but only one can hold X. <b>Upgrading</b> turns S into X; <b>downgrading</b> turns X into S.</p>\n<h3>Problem with simple locking</h3><p>A=1000, B=500. T1 locks A, subtracts 100, <b>unlocks A early</b>. T2 reads A=900 and B=500 (total 1400) before T1 adds 100 to B. The correct total is 1500, so the result is inconsistent.</p>\n<h3>Two-phase locking (2PL)</h3><p>All lock operations precede all unlock operations. <b>Growing phase</b>: acquire locks only. <b>Lock point</b>: the final lock. <b>Shrinking phase</b>: release only. 2PL guarantees serializability but may reduce concurrency (holding locks unnecessarily, locking too early) and can deadlock.</p>\n<h3>Variations</h3><p><b>Conservative (static) 2PL</b>: take all locks before starting, release after commit; <b>deadlock free</b>. <b>Strict 2PL</b>: X locks held until commit or abort; gives cascadeless schedules. <b>Rigorous 2PL</b>: all locks held until commit; avoids cascading rollback. Strict and rigorous can still deadlock.</p>\n<h3>Deadlock</h3><p>Two or more transactions each wait for a lock held by another. Detect it with a <b>wait-for graph</b>: node per transaction, edge Ti → Tj when Ti waits for an item held by Tj. <b>A cycle means deadlock.</b> Four necessary conditions: <b>mutual exclusion, hold and wait, no preemption, circular wait</b>.</p>",
+  "code": "",
+  "quiz": [
+   {
+    "q": "Which lock pair is compatible?",
+    "options": [
+     "S and S",
+     "S and X",
+     "X and S",
+     "X and X"
+    ],
+    "answer": 0,
+    "why": "Only shared with shared."
+   },
+   {
+    "q": "In 2PL, after the first unlock the transaction may?",
+    "options": [
+     "Acquire new locks",
+     "Only release locks",
+     "Do nothing",
+     "Abort silently"
+    ],
+    "answer": 1,
+    "why": "The shrinking phase."
+   },
+   {
+    "q": "Which 2PL variant is deadlock free?",
+    "options": [
+     "Strict",
+     "Rigorous",
+     "Conservative",
+     "Basic"
+    ],
+    "answer": 2,
+    "why": "All locks are taken up front."
+   },
+   {
+    "q": "A cycle in the wait-for graph means?",
+    "options": [
+     "Serializable schedule",
+     "Deadlock",
+     "Recoverable schedule",
+     "Commit"
+    ],
+    "answer": 1,
+    "why": "Everyone in the cycle is stuck."
+   },
+   {
+    "q": "Which is NOT a necessary condition for deadlock?",
+    "options": [
+     "Mutual exclusion",
+     "Hold and wait",
+     "Preemption",
+     "Circular wait"
+    ],
+    "answer": 2,
+    "why": "It is NO preemption."
+   },
+   {
+    "q": "Strict 2PL holds which locks until commit/abort?",
+    "options": [
+     "Shared only",
+     "Exclusive",
+     "None",
+     "Table locks only"
+    ],
+    "answer": 1,
+    "why": "Exclusive locks."
+   }
+  ],
+  "lab": {
+   "task": "T1 holds X(P) and waits for Q; T2 holds X(Q) and waits for P. Draw the wait-for graph and name the problem and one way to prevent it.",
+   "solution": "Edges T1→T2 and T2→T1 form a cycle: deadlock. Prevent with conservative 2PL (lock everything first) or a global lock ordering (break circular wait)."
+  }
+ }
+]
