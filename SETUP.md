@@ -34,7 +34,7 @@ Check the installs by opening a terminal and typing `node -v` and `git --version
    - **Make the two small find and replace edits** in `src/pages/Exam.tsx` and `src/pages/Admin.tsx` that `PLACE_ME.md` lists.
 3. Keep the other `content` files (lessons, labs, banks, exams) somewhere easy to find. You will import them later from the admin page.
 
-Your folder should now contain, among others: `package.json`, `index.html`, `capacitor.config.ts`, `firestore.rules`, `.github/workflows/` (two files), `public/` (images), `resources/icon.png`, `seed/`, `src/`.
+Your folder should now contain, among others: `package.json`, `index.html`, `capacitor.config.ts`, `firestore.rules`, `.github/workflows/` (two files), `public/` (images), `resources/`, `seed/`, `src/`.
 
 ---
 
@@ -54,7 +54,7 @@ Keep that browser tab or a note open. You need these values twice (local and Git
 
 1. Sign up at **cloudinary.com**. On the dashboard note your **Cloud name**.
 2. **Settings (gear), Upload, Upload presets, Add upload preset.**
-3. Set **Signing mode** to **Unsigned**. Name it, for example, `javaquest`. Save.
+3. Set **Signing mode** to **Unsigned**. Name it, for example, `dbquest`. Save.
 4. Note the preset name.
 
 If you skip this, everything works except uploading lesson images in the admin page.
@@ -72,7 +72,7 @@ VITE_FB_AUTH_DOMAIN=your authDomain
 VITE_FB_PROJECT_ID=your projectId
 VITE_FB_APP_ID=your appId
 VITE_CLD_CLOUD=your Cloudinary cloud name
-VITE_CLD_PRESET=javaquest
+VITE_CLD_PRESET=dbquest
 ```
 
 3. In a terminal inside `jq`:
@@ -187,7 +187,7 @@ When you add lessons or exams in the admin page, **nobody needs a new APK**. The
 | Image upload fails | The Cloudinary preset must be **Unsigned**; check the cloud name |
 | Build error in GitHub Actions | Open the run, click the red step, copy the last 30 lines and send them to me, along with the file name |
 | Cloudflare deploy fails with "project not found" | The project name must be exactly `db-quest` (Section 8, step 2) |
-| APK build fails at `cap add android` | Send me the log; it is usually a Gradle or Java version message |
+| APK build fails at `cap add android` | Send me the log; it is usually an Android toolchain version message |
 | Lessons show but no practice questions | Bank files not imported, or `Lesson.tsx` not replaced |
 | Leaderboard or history empty | New rules not published, or no XP earned yet |
 | Duplicate lessons | Delete the extra documents in Firestore, collection `modules` |
