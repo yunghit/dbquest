@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
@@ -8,9 +8,14 @@ import "./home.css";
 const cleanCopy = (value: string) =>
   value.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 
+type ModuleFilter = "all" | "open" | "complete";
+
 export default function Home({ prof }: { prof: Profile }) {
   const [modules, setModules] = useState<Module[]>([]);
   const [exams, setExams] = useState<Array<{ id: string; title: string }>>([]);
+  const [filter, setFilter] = useState<ModuleFilter>("all");
+  const [search, setSearch] = useState("");
+  const [showAllExams, setShowAllExams] = useState(false);
 
   useEffect(() => {
     getDocs(query(collection(db, "modules"), orderBy("order"))).then((snapshot) =>
@@ -25,7 +30,7 @@ export default function Home({ prof }: { prof: Profile }) {
       setExams(
         snapshot.docs.map((item) => ({
           id: item.id,
-          title: (item.data() as { title?: string }).title || "Java checkpoint",
+          title: (item.data() as { title?: string }).title || "DBMS checkpoint",
         })),
       ),
     );
@@ -46,6 +51,21 @@ export default function Home({ prof }: { prof: Profile }) {
     : false;
   const playerName = prof.email?.split("@")[0] || "player";
   const level = Math.floor(xp / 100) + 1;
+  const xpIntoLevel = xp % 100;
+  const xpToNextLevel = xpIntoLevel ? 100 - xpIntoLevel : 100;
+
+  const visibleModules = useMemo(() => {
+    const normalizedSearch = search.trim().toLowerCase();
+    return modules.filter((module) => {
+      const isComplete = module.id ? Boolean(prof.done[module.id]) : false;
+      const matchesFilter =
+        filter === "all" || (filter === "complete" ? isComplete : !isComplete);
+      const matchesSearch = !normalizedSearch
+        ? true
+        : `${module.title} ${module.learn}`.toLowerCase().includes(normalizedSearch);
+      return matchesFilter && matchesSearch;
+    });
+  }, [filter, modules, prof.done, search]);
 
   return (
     <div className="home-dashboard">
@@ -53,10 +73,10 @@ export default function Home({ prof }: { prof: Profile }) {
         <div className="home-hero-copy">
           <p className="eyebrow">PLAYER HUB / READY FOR ANOTHER RUN?</p>
           <h1>
-            Keep your Java <span>momentum.</span>
+            Keep your DBMS <span>momentum.</span>
           </h1>
           <p className="home-hero-lede">
-            Welcome back, {playerName}. Build confidence one challenge at a time
+            Welcome back, {playerName}. Build database intuition one challenge at a time
             and turn today&apos;s practice into tomorrow&apos;s fluency.
           </p>
           <div className="home-hero-actions">
@@ -115,46 +135,135 @@ export default function Home({ prof }: { prof: Profile }) {
           <span className="home-stat-icon">⌁</span>
           <div>
             <span className="home-stat-label">Next milestone</span>
-            <strong>{Math.max(0, 100 - (xp % 100))} XP</strong>
-            <small>Until your next level</small>
+            <strong>{xpToNextLevel} XP</strong>
+            <small>Until level {level + 1}</small>
           </div>
         </div>
       </section>
 
-      <section>
+      <section aria-label="Daily quest" className="home-quick-panel">
+        <div className="home-quick-copy">
+          <span className="home-quick-icon">⚡</span>
+          <div>
+            <p className="eyebrow">DAILY QUEST</p>
+            <h2>{nextModule ? "Finish one DBMS mission" : "Your mission board is ready"}</h2>
+            <p>
+              {nextModule
+                ? `Next up: ${nextModule.title}. A focused run is all it takes to keep your streak moving.`
+                : "An admin can add lessons to unlock your first learning run."}
+            </p>
+          </div>
+        </div>
+        <div className="home-quick-action">
+          <div className="home-quick-progress">
+            <div className="home-quick-progress-label">
+              <span>Course signal</span>
+              <strong>{courseProgress}%</strong>
+            </div>
+            <div className="home-quick-track" aria-hidden="true">
+              <i style={{ width: `${courseProgress}%` }} />
+            </div>
+          </div>
+          {nextModuleId && (
+            <Link className="button button-small" to={`/lesson/${nextModuleId}`}>
+              Start quest <span aria-hidden="true">↗</span>
+            </Link>
+          )}
+        </div>
+      </section>
+
+      <section aria-labelledby="curriculum-title">
         <div className="home-section-heading">
           <div>
             <p className="eyebrow">THE CURRICULUM</p>
-            <h2>Choose your next mission</h2>
+            <h2 id="curriculum-title">Choose your next mission</h2>
           </div>
-          <span className="home-section-count">{modules.length} modules</span>
+          <span className="home-section-count">
+            {visibleModules.length} of {modules.length} modules
+          </span>
+        </div>
+        <div className="home-curriculum-tools">
+          <label className="home-search">
+            <span className="sr-only">Search modules</span>
+            <span aria-hidden="true">⌕</span>
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search topics or skills"
+            />
+            {search && (
+              <button
+                type="button"
+                className="home-search-clear"
+                aria-label="Clear search"
+                onClick={() => setSearch("")}
+              >
+                ×
+              </button>
+            )}
+          </label>
+          <div className="home-filter-group" role="group" aria-label="Filter modules">
+            {(["all", "open", "complete"] as ModuleFilter[]).map((value) => (
+              <button
+                type="button"
+                key={value}
+                className={filter === value ? "is-active" : ""}
+                aria-pressed={filter === value}
+                onClick={() => setFilter(value)}
+              >
+                {value === "all" ? "All missions" : value === "open" ? "Open" : "Complete"}
+              </button>
+            ))}
+          </div>
         </div>
         {modules.length ? (
-          <div className="home-module-grid">
-            {modules.map((module) => {
-              const moduleId = module.id ?? String(module.order);
-              const isComplete = module.id ? Boolean(prof.done[module.id]) : false;
-              return (
-                <Link
-                  className={isComplete ? "home-module-card is-complete" : "home-module-card"}
-                  key={moduleId}
-                  to={`/lesson/${moduleId}`}
-                >
-                  <div className="home-module-topline">
-                    <span>MODULE {String(module.order).padStart(2, "0")}</span>
-                    <span>{isComplete ? "COMPLETE" : "+60 XP"}</span>
-                  </div>
-                  <div className="home-module-icon">{module.emoji}</div>
-                  <h3>{module.title}</h3>
-                  <p>{cleanCopy(module.learn).slice(0, 108)}…</p>
-                  <div className="home-module-footer">
-                    <span>{isComplete ? "Replay mission" : "Open lesson"}</span>
-                    <span className="home-module-arrow">→</span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          visibleModules.length ? (
+            <div className="home-module-grid">
+              {visibleModules.map((module) => {
+                const moduleId = module.id ?? String(module.order);
+                const isComplete = module.id ? Boolean(prof.done[module.id]) : false;
+                const summary = cleanCopy(module.learn);
+                return (
+                  <Link
+                    className={isComplete ? "home-module-card is-complete" : "home-module-card"}
+                    key={moduleId}
+                    to={`/lesson/${moduleId}`}
+                  >
+                    <div className="home-module-topline">
+                      <span>MODULE {String(module.order).padStart(2, "0")}</span>
+                      <span>
+                        {isComplete
+                          ? "COMPLETE"
+                          : moduleId === nextModuleId
+                            ? "NEXT UP"
+                            : "+60 XP"}
+                      </span>
+                    </div>
+                    <div className="home-module-icon">{module.emoji}</div>
+                    <h3>{module.title}</h3>
+                    <p>
+                      {summary.slice(0, 108)}
+                      {summary.length > 108 ? "…" : ""}
+                    </p>
+                    <div className="home-module-footer">
+                      <span>{isComplete ? "Replay mission" : "Open lesson"}</span>
+                      <span className="home-module-arrow" aria-hidden="true">
+                        →
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="home-empty-state">
+              <span className="home-empty-icon">⌕</span>
+              <div>
+                <h3>No missions match that filter</h3>
+                <p>Try another search or switch back to all missions.</p>
+              </div>
+            </div>
+          )
         ) : (
           <div className="home-empty-state">
             <span className="home-empty-icon">◌</span>
@@ -166,10 +275,10 @@ export default function Home({ prof }: { prof: Profile }) {
         )}
       </section>
 
-      <section className="home-checkpoints">
+      <section className="home-checkpoints" aria-labelledby="checkpoints-title">
         <div className="home-checkpoints-copy">
           <p className="eyebrow">CHECKPOINTS</p>
-          <h2>Prove what you know.</h2>
+          <h2 id="checkpoints-title">Prove what you know.</h2>
           <p>
             Exams turn your practice into a clear signal of progress. Take one
             when you&apos;re ready, then use your history to spot what to revisit.
@@ -180,15 +289,26 @@ export default function Home({ prof }: { prof: Profile }) {
         </div>
         <div className="home-exam-list">
           {exams.length ? (
-            exams.slice(0, 3).map((exam, index) => (
+            exams.slice(0, showAllExams ? exams.length : 3).map((exam, index) => (
               <Link className="home-exam-row" key={exam.id} to={`/exam/${exam.id}`}>
-                <span className="home-exam-number">0{index + 1}</span>
+                <span className="home-exam-number">{String(index + 1).padStart(2, "0")}</span>
                 <span className="home-exam-title">{exam.title}</span>
-                <span className="home-module-arrow">→</span>
+                <span className="home-module-arrow" aria-hidden="true">
+                  →
+                </span>
               </Link>
             ))
           ) : (
             <p className="home-no-exams">No checkpoints available yet.</p>
+          )}
+          {exams.length > 3 && (
+            <button
+              type="button"
+              className="home-inline-button"
+              onClick={() => setShowAllExams((visible) => !visible)}
+            >
+              {showAllExams ? "Show fewer checkpoints" : `Show all ${exams.length} checkpoints`}
+            </button>
           )}
         </div>
       </section>
