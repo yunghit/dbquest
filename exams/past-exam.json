@@ -1,0 +1,88 @@
+{
+ "title": "Past Exam: COMP 332 last year",
+ "minutes": 180,
+ "sections": [
+  {
+   "name": "Section A (10 × 2 = 20)",
+   "type": "written",
+   "questions": [
+    {
+     "q": "Define DBMS.",
+     "model": "A DBMS is a collection of interrelated data (the database) together with a set of programs to access that data. It provides a convenient and efficient environment for storing and retrieving information, with controlled redundancy, integrity, security, concurrency control and backup/recovery.",
+     "marks": 2
+    },
+    {
+     "q": "What is physical and logical data independence?",
+     "model": "Physical : the ability to change how data is stored (file organisation, indexes, storage structures) without changing the logical schema or application programs. Logical : the ability to change the logical schema (e.g. size or data type of a field, adding fields) without rewriting the application programs. The DBMS sits between the data and the programs.",
+     "marks": 2
+    },
+    {
+     "q": "Define serializability.",
+     "model": "A schedule S of n transactions is serializable if it is equivalent to some serial schedule of the same n transactions. It is tested as conflict serializable (acyclic precedence graph) or view serializable.",
+     "marks": 2
+    },
+    {
+     "q": "What is meant by time stamping?",
+     "model": "A unique identifier created by the DBMS that indicates the relative starting time of a transaction, generated from the system clock or a logical counter. An older transaction has a smaller timestamp (TS(T1) < TS(T2)). With RTS and WTS of each item it orders conflicting operations.",
+     "marks": 2
+    },
+    {
+     "q": "What is locking?",
+     "model": "A procedure used to control concurrent access to data while one transaction is accessing it. A lock gives a transaction exclusive use of a data item and may deny access to others to prevent incorrect results. Types: shared (read) and exclusive (read and write); acquire before access, release after completion.",
+     "marks": 2
+    },
+    {
+     "q": "Define sparse and dense indexing.",
+     "model": "Dense : an index entry is created for every search-key value. Sparse : an index entry is created only for some records (e.g. one per block).",
+     "marks": 2
+    },
+    {
+     "q": "What are the ACID properties of a transaction?",
+     "model": "A tomicity: all or nothing (commit makes changes visible, abort hides them). C onsistency: database is consistent before and after (sum A+B same). I solation: a transaction's actions are hidden from others until it terminates. D urability: committed updates are permanent.",
+     "marks": 2
+    },
+    {
+     "q": "What are the disadvantages of using a schedule?",
+     "model": "For a serial schedule: (i) it limits concurrency, (ii) it causes CPU waste, (iii) smaller transactions may need to wait long. (Interleaved schedules in turn can give conflicts such as lost update or dirty read unless concurrency control enforces serializability.)",
+     "marks": 2
+    },
+    {
+     "q": "What are the four necessary conditions for deadlock?",
+     "model": "Mutual exclusion , hold and wait , no preemption , circular wait .",
+     "marks": 2
+    },
+    {
+     "q": "What are the two phases in two-phase locking?",
+     "model": "Growing (expanding) phase : new locks can be acquired but none released. Shrinking phase : locks are released but no new locks are acquired. The final lock marks the lock point.",
+     "marks": 2
+    }
+   ]
+  },
+  {
+   "name": "Section B (4 × 10 = 40)",
+   "type": "written",
+   "questions": [
+    {
+     "q": "List and explain any five limitations/disadvantages of file system data management. [10]",
+     "model": "Learn all eight; write any five: Data redundancy. The same information is duplicated in several files (e.g. a student's name, roll number and class in both Library and Examinations). It raises storage and access cost.; Data inconsistency. Copies of the same data hold different values; changing a name in the library but not in exams leaves contradictions. Every file holding the item must be changed.; Accessing anomalies (difficulty in accessing data). Needed data cannot be retrieved conveniently or efficiently. Example: the bank officer who wants customers in zip code 600001, then only those with balance of 10,000 or more, needs a new program written each time because the request was not anticipated.; Data isolation. Data is scattered in many files, in different formats, so writing new programs to retrieve the right data is difficult.; Integrity problems. Consistency constraints (e.g. balance never below 500) are coded inside application programs; adding a new constraint means changing many programs.; Atomicity problems. After a failure the data must return to the consistent state before it. Example: transferring 50 from A to B; a crash can remove it from A without crediting B. The transfer must be all or nothing, which is hard in a file system.; Concurrent access anomalies. Many users update at the same time without coordination. Example: account A holds 500; withdrawals of 50 and 100 at about the same time can leave 450 or 400 instead of 350.; Security problems. Not every user should see all data. Programs are added ad hoc, so enforcing it is hard. Example: payroll staff should see employee data but not customer accounts.;",
+     "marks": 10
+    },
+    {
+     "q": "What is a transaction? Briefly discuss the conflicts of concurrent execution with suitable example. [2+4*2=10]",
+     "model": "A transaction is a program unit whose execution may change the contents of the database; a logical unit of database processing that must be completed in its entirety to ensure correctness. Example: transfer 100 from A (300) to B (400): R(A) A=A-100 W(A) R(B) B=B+100 W(B); A+B = 700 before and after. Concurrent execution means multiple transactions run concurrently in the DBMS, each doing its atomic unit of work. Advantages: decreased waiting time, improved throughput and resource utilisation. Problems (conflicts) follow. Lost update (write-write, W-W). Two transactions access the same item and their operations interleave so the item ends up wrong. Example: x=100. T1 reads 100, adds 10; T2 reads 100, subtracts 20; T1 writes 110; T2 writes 80. T1's update is overwritten (correct serial result would be 90).; Dirty read / temporary update (write-read, W-R). A transaction updates an item and then fails (not committed), but another transaction has already read the uncommitted value. Example: x=100; T1 writes x=110; T2 reads 110 and writes 160; T1 fails. T2 used a value that never existed.; Incorrect summary. One transaction computes an aggregate (e.g. a sum) while another updates some of the records, so the aggregate mixes old and new values. Example: A=100, Y=200; T2 sums A (100) then reads Y; T1 changes Y to 300 in between. The sum is wrong.; Unrepeatable read (read-write, R-W). T1 reads an item twice and T2 changes it between the two reads, so T1 sees two different values. Example: A=1000; T1 reads 1000; T2 writes A=3000; T1 reads again and gets 3000.;",
+     "marks": 10
+    },
+    {
+     "q": "Briefly discuss any five different types of schedules with suitable example. [5*2=10]",
+     "model": "Know all seven; write any five: Serial schedule. No interleaving of operations of different transactions; always consistent. Example: T1 (R(A), A=A+50, W(A)) completes, then T2 (R(A), A=A+100, W(A)). A=100 gives 150 then 250; T2 then T1 also gives 250. Disadvantages: limits concurrency, wastes CPU, short transactions may wait long.; Complete schedule. The last operation of every transaction is commit or abort. Example: T1: R(A) W(A) Commit; T2: R(A) W(A) Abort.; Recoverable schedule. If Tj reads a value written by Ti, then Ti must commit before Tj. Example: T1: R(A), A=A+10, W(A), Commit; then T2: R(A), A=A-5, W(A), Commit.; Non-recoverable schedule. A transaction does a dirty read from an uncommitted transaction and commits before that transaction does. Example: T1 R(x) x=x+10 W(x); T2 R(x) x=x-5 W(x) Commit; T1 fails. T2 should be rolled back but has already committed.; Cascading schedule (cascading rollback). Failure of one transaction forces several dependent transactions to roll back or abort. Example: T1 writes A=A-50; T2 and T3 read that value; T1 fails, so T2 and T3 abort too.; Cascadeless schedule. A transaction may read a value only after the transaction that wrote it commits. Example: T1: R(A) W(A) Commit; then T2: R(A) W(A) Commit; then T3: R(A) W(A) Commit.; Strict schedule. A value written by a transaction cannot be read or overwritten by another transaction until the writer commits or aborts. Every strict schedule is recoverable and cascadeless. Example: T1: R(A) W(A) Commit; only then T2: W(A) R(A).; Also know: serializable (equivalent to a serial schedule; conflict or view), non-serial (operations interleaved). Strict ⊂ cascadeless ⊂ recoverable.",
+     "marks": 10
+    },
+    {
+     "q": "What is database recovery management? Discuss two recovery techniques with example. [2+4+4=10]",
+     "model": "Database recovery management is the process of restoring the database to the most recent consistent state that existed just before the failure. Pre-condition: database in a consistent state. Condition: some kind of failure occurs. Post-condition: restore the consistent state that existed before the failure. Failures: system crash, transaction/logical error, concurrency-control enforcement, local errors/exceptions, disk failure, physical problems or catastrophes. Recovery uses the log file : [start_transaction, T], [write_item, T, X, old, new], [read_item, T, X], [commit, T], [abort, T]. Technique 1: Deferred update (late modification, no-undo/redo). Operations do not update the physical database immediately; it is updated only after the transaction reaches its commit point. Example: A=100, B=200. T1: R(A) A=A+100 W(A) R(B) B=B+200 W(B) Commit. Log: &lt;T1,start&gt; &lt;T1,A,200&gt; &lt;T1,B,400&gt; &lt;T1,commit&gt; (new values only). If T1 committed → redo, database becomes A=200, B=400. If not committed → nothing was written; roll back/ignore. Technique 2: Immediate update (undo/redo). The database is updated by the operations during execution, even before commit. Example: same T1. Log: &lt;T1,start&gt; &lt;T1,A,100,200&gt; &lt;T1,B,200,400&gt; &lt;T1,commit&gt; (old and new values). If T1 committed → redo (apply new values). If it failed before commit → undo (restore old values A=100, B=200).",
+     "marks": 10
+    }
+   ]
+  }
+ ]
+}
